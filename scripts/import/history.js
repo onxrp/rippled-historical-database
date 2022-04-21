@@ -17,7 +17,6 @@ var HistoricalImport = function () {
   this.total    = 0;
   this.section  = { };
 
-
   var log = new Logger({
     scope: 'hbase_history',
     level: config.get('logLevel') || 0,
