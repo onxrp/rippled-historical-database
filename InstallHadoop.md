@@ -34,7 +34,7 @@ Ports you can check in the browser:
 <your ip>:9870/dfshealth.html#tab-overview
 <your ip>:20550
 <your ip>:8088/cluster
-<your ip>:16010
+<your ip>:16010 (hbase)
 
 
 
@@ -106,5 +106,13 @@ jps (check runnign shizle)
 
 
 node /usr/local/ripple-historical-database/scripts/import/backfill.js --startIndex 70000000
-pm2 start /usr/local/ripple-historical-database/scripts/import/backfill.js --name ripple-histdb-backfill --restart-delay 60000 -- --startIndex 70000000
+pm2 delete ripple-histdb-backfill 
+pm2 start /usr/local/ripple-historical-database/scripts/import/backfill.js --name ripple-histdb-backfill --restart-delay 60000 -- --startIndex 70074972
 pm2 start yarn --name ripple-histdb-api -- start
+
+
+tail -1000 /usr/local/HBase/logs/hbase-hadoop-master-ip-172-31-1-127.us-east-2.compute.internal.log
+
+tail -1000 /usr/local/HBase/logs/hbase-hadoop-regionserver-ip-172-31-1-127.us-east-2.compute.internal.log
+tail -1000 /usr/local/HBase/logs/hbase-hadoop-2-regionserver-ip-172-31-1-127.us-east-2.compute.internal.log
+tail -1000 /usr/local/ripple-historical-database/logs/historical-database.log
