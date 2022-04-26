@@ -105,9 +105,20 @@ hbase-daemon.sh start thrift -f -p 9090
 jps (check runnign shizle)
 
 
+yarn run import:live
+yarn run import:backfill -- --startIndex 70000000
+yarn run import:createTables
+
+
 node /usr/local/ripple-historical-database/scripts/import/backfill.js --startIndex 70000000
 pm2 delete ripple-histdb-backfill 
-pm2 start /usr/local/ripple-historical-database/scripts/import/backfill.js --name ripple-histdb-backfill --restart-delay 60000 -- --startIndex 70074972
+pm2 start /usr/local/ripple-historical-database/scripts/import/backfill.js --name ripple-histdb-backfill --restart-delay 60000 -- --startIndex 70135272
+
+yarn run import:backfill -- --startIndex
+
+cd /usr/local/ripple-historical-database
+pm2 start yarn --name ripple-histdb-backfill -- import:backfill -- --startIndex 70135272
+pm2 start yarn --name ripple-histdb-liveimport -- import:live
 pm2 start yarn --name ripple-histdb-api -- start
 
 
@@ -115,4 +126,6 @@ tail -1000 /usr/local/HBase/logs/hbase-hadoop-master-ip-172-31-1-127.us-east-2.c
 
 tail -1000 /usr/local/HBase/logs/hbase-hadoop-regionserver-ip-172-31-1-127.us-east-2.compute.internal.log
 tail -1000 /usr/local/HBase/logs/hbase-hadoop-2-regionserver-ip-172-31-1-127.us-east-2.compute.internal.log
-tail -1000 /usr/local/ripple-historical-database/logs/historical-database.log
+
+tail -1000 /usr/local/ripple-historical-database/logs/backfill.log
+tail -1000 /usr/local/ripple-historical-database/logs/live.log

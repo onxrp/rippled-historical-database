@@ -12,12 +12,16 @@
     "test": "node_modules/.bin/mocha --ui tdd -R spec test/setup.api.js test/test.*.js --logLevel 0",
     "test:limit": "node_modules/.bin/mocha --ui tdd -R spec test/test.rateLimit.js",
     "lint": "if ! [ -f eslintrc ]; then curl -o eslintrc 'https://raw.githubusercontent.com/ripple/javascript-style-guide/es6/eslintrc' >> eslintrc; fi; eslint -c eslintrc --rule {no-var:0} $(git --no-pager diff --name-only -M100% --diff-filter=AM --relative origin/HEAD | grep \".js$\")",
-    "start": "nodemon api/index.js"
+    "start": "nodemon api/index.js --configName api",
+    "import:live": "ts-node scripts/import/live.ts  --configName live",
+    "import:backfill": "ts-node scripts/import/backfill.ts  --configName import"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/async-exit-hook": "^2.0.0",
     "async": "^0.9.0",
+    "async-exit-hook": "^2.0.1",
     "bignumber.js": "2.0.7",
     "bluebird": "^2.3.4",
     "body-parser": "^1.8.2",
@@ -26,7 +30,6 @@
     "cors": "^2.5.0",
     "cron": "^1.1.0",
     "elliptic": "^6.2.3",
-    "eslint": "2.9.0",
     "express": "^4.9.3",
     "hbase": "^0.1.7",
     "int64-buffer": "^0.1.1",
@@ -34,6 +37,7 @@
     "moment": "^2.9.0",
     "nconf": "^0.6.9",
     "nice-json2csv": "^0.2.0",
+    "nodeify": "^1.0.1",
     "nodemailer": "^1.4.0",
     "nodemon": "^1.2.1",
     "ratelimiter": "^3.0.3",
@@ -42,7 +46,7 @@
     "request-promise": "^2.0.0",
     "ripple-address-codec": "4.2.3",
     "ripple-binary-codec": "1.3.2",
-    "ripple-lib": "1.10.0",
+    "ripple-lib": "^1.10.0",
     "ripple-lib-transactionparser": "0.8.2",
     "serve-favicon": "^2.3.0",
     "sjcl": "^1.0.3",
@@ -50,7 +54,13 @@
     "underscore": "^1.6.0",
     "webhdfs": "^1.1.1",
     "winston": "^0.8.3",
-    "ws": "^1.0.1",
-    "xrpl": "^2.1.1"
+    "ws": "^1.0.1"
+  },
+  "devDependencies": {
+    "@onxrp/eslint-config": "^1.0.0",
+    "eslint": "^8.11.0",
+    "prettier": "^2.5.1",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.6.2"
   }
 }

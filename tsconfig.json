@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "module": "CommonJS",
+    "target": "es6",
+    "outDir": "dist",
+    "declaration": true,
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "strict": false,                           /* Enable all strict type-checking options. */
+    "noImplicitAny": true,                    /* Raise error on expressions and declarations with an implied 'any' type. */
+    "strictNullChecks": true,                 /* Enable strict null checks. */
+    "strictFunctionTypes": true,              /* Enable strict checking of function types. */
+    "strictBindCallApply": true,              /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
+    "strictPropertyInitialization": true,     /* Enable strict checking of property initialization in classes. */
+    "noImplicitThis": true,                   /* Raise error on 'this' expressions with an implied 'any' type. */
+    "alwaysStrict": false,                     /* Parse in strict mode and emit "use strict" for each source file. */
+    "esModuleInterop": true,                  /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
+    "skipLibCheck": true,                     /* Skip type checking of declaration files. */
+    "forceConsistentCasingInFileNames": true,  /* Disallow inconsistently-cased references to the same file. */
+    "useUnknownInCatchVariables": false,
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "preserveSymlinks": true,
+    "noFallthroughCasesInSwitch": true,
+    "lib": [
+      "ESNext",
+      "ES2019",
+      "DOM"
+    ],
+  },
+  "include": ["**/*.ts", "**/*.tsx", "**/*.json"],
+  "exclude": ["**/*.d.ts", "dist", "node_modules", "lib/hbase"]
+}

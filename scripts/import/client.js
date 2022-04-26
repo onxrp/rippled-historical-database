@@ -1,4 +1,4 @@
-var config   = require('../../config/import.config');
+var config   = require('../../config');
 var Logger   = require('../../lib/logger');
 var hbase    = require('../../lib/hbase');
 var Parser   = require('../../lib/ledgerParser');
@@ -14,9 +14,9 @@ var Client = function () {
   var hbaseOptions = config.get('hbase');
   hbaseOptions.logLevel = config.get('logLevel') || 2;
 
-  self.initPeakInfo = function() {
-      hbase.initPeakInfo();
-  }
+  // self.initPeakInfo = function() {
+  //     hbase.initPeakInfo();
+  // }
 
   self.saveLedger = function (ledger, callback) {
 
