@@ -28,6 +28,8 @@ hbase rootdir should be on port 9000 since latest release
   <value>hdfs://localhost:9000/hbase</value>
 </property>
 
+HBASe lots of read fixes: http://gbif.blogspot.com/2012/07/optimizing-writes-in-hbase.html
+
 
 
 Ports you can check in the browser:
@@ -117,9 +119,10 @@ pm2 start /usr/local/ripple-historical-database/scripts/import/backfill.js --nam
 yarn run import:backfill -- --startIndex
 
 cd /usr/local/ripple-historical-database
-pm2 start yarn --name ripple-histdb-backfill -- import:backfill -- --startIndex 70135272
-pm2 start yarn --name ripple-histdb-liveimport -- import:live
-pm2 start yarn --name ripple-histdb-api -- start
+pm2 start "yarn run import:backfill --startIndex 70135272" --name ripple-histdb-backfill
+pm2 start "yarn run import:backfill --startIndex 71200000 --stopIndex 71258655" --name ripple-histdb-backfill-lastday
+pm2 start "yarn run import:live" --name ripple-histdb-liveimport
+pm2 start "yarn run start" --name ripple-histdb-api
 
 
 tail -1000 /usr/local/HBase/logs/hbase-hadoop-master-ip-172-31-1-127.us-east-2.compute.internal.log
@@ -129,3 +132,4 @@ tail -1000 /usr/local/HBase/logs/hbase-hadoop-2-regionserver-ip-172-31-1-127.us-
 
 tail -1000 /usr/local/ripple-historical-database/logs/backfill.log
 tail -1000 /usr/local/ripple-historical-database/logs/live.log
+tail -1000 /usr/local/ripple-historical-database/logs/api.log
