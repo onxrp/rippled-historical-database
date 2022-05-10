@@ -125,10 +125,13 @@ pm2 start "yarn run import:live" --name ripple-histdb-liveimport
 pm2 start "yarn run start" --name ripple-histdb-api
 
 
-tail -1000 /usr/local/HBase/logs/hbase-hadoop-master-ip-172-31-1-127.us-east-2.compute.internal.log
+pm2 start "storm nimbus" --name storm-nimbus
+pm2 start "storm supervisor" --name storm-supervisor
+pm2 start "storm ui" --name storm-ui
 
-tail -1000 /usr/local/HBase/logs/hbase-hadoop-regionserver-ip-172-31-1-127.us-east-2.compute.internal.log
-tail -1000 /usr/local/HBase/logs/hbase-hadoop-2-regionserver-ip-172-31-1-127.us-east-2.compute.internal.log
+
+tail -1000 /usr/local/HBase/logs/hbase-ec2-user-master-ip-172-31-7-102.us-east-2.compute.internal.log
+tail -1000  /usr/local/HBase/logs/hbase-ec2-user-regionserver-ip-172-31-7-102.us-east-2.compute.internal.log
 
 tail -1000 /usr/local/ripple-historical-database/logs/backfill.log
 tail -1000 /usr/local/ripple-historical-database/logs/live.log
