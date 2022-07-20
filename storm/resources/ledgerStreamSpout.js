@@ -83,7 +83,7 @@ function handleAPIError(errorCode, errorMessage, data) {
 
 function LedgerStreamSpout() {
   Spout.call(this)
-  this.pending = { }
+  this.pending = {}
 }
 
 LedgerStreamSpout.prototype = Object.create(Spout.prototype)
@@ -199,6 +199,14 @@ LedgerStreamSpout.prototype.nextTuple = function(done) {
   }
 
   setTimeout(done, timeout)
+}
+
+LedgerStreamSpout.prototype.activate = function(done) {
+  done()
+}
+
+LedgerStreamSpout.prototype.deactivate = function(done) {
+  done()
 }
 
 /**
