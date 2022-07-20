@@ -131,8 +131,32 @@ pm2 start "storm ui" --name storm-ui
 
 
 tail -1000 /usr/local/HBase/logs/hbase-ec2-user-master-ip-172-31-7-102.us-east-2.compute.internal.log
-tail -1000  /usr/local/HBase/logs/hbase-ec2-user-regionserver-ip-172-31-7-102.us-east-2.compute.internal.log
+tail -1000 /usr/local/HBase/logs/hbase-ec2-user-regionserver-ip-172-31-7-102.us-east-2.compute.internal.log
+tail -1000 /usr/local/HBase/logs/hbase-ec2-user-2-regionserver-ip-172-31-7-102.us-east-2.compute.internal.log
+tail -1000 /usr/local/HBase/logs/hbase-ec2-user-zookeeper-ip-172-31-7-102.us-east-2.compute.internal.log
+tail -1000 /usr/local/HBase/logs/hbase-ec2-user-rest-ip-172-31-7-102.us-east-2.compute.internal.log
+tail -1000 /usr/local/HBase/logs/hbase-ec2-user-thrift-ip-172-31-7-102.us-east-2.compute.internal.log
 
 tail -1000 /usr/local/ripple-historical-database/logs/backfill.log
+tail -1000 /usr/local/ripple-historical-database/logs/default.log
 tail -1000 /usr/local/ripple-historical-database/logs/live.log
+tail -1000 /usr/local/ripple-historical-database/logs/hbase.log
 tail -1000 /usr/local/ripple-historical-database/logs/api.log
+
+/usr/local/ripple-historical-database/storm/production/importer.sh start
+/usr/local/ripple-historical-database/storm/production/importer.sh restart
+/usr/local/ripple-historical-database/storm/production/importer.sh stop
+
+tail -1000 /usr/local/storm/logs/worker-6700.log
+
+// check space
+du -sh /usr/local/*
+// usually here: /usr/local/ripple-historical-database
+// usually here: /usr/local/HBase/logs
+
+
+https://www.sentinelone.com/blog/ec2-memory-usage/
+log-configuration-aws.json
+sudo nano /opt/aws/amazon-cloudwatch-agent/bin/config.json
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s
+systemctl restart amazon-cloudwatch-agent.service

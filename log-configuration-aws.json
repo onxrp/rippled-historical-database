@@ -1,0 +1,98 @@
+{
+  "logs": {
+    "logs_collected": {
+      "files": {
+        "collect_list": [
+          {
+            "file_path": "/usr/local/HBase/logs/hbase-ec2-user-master-ip-172-31-7-102.us-east-2.compute.internal.log",
+            "log_group_name": "{instance_id}_logs",
+            "log_stream_name": "hbase-master"
+          },
+          {
+            "file_path": "/usr/local/HBase/logs/hbase-ec2-user-regionserver-ip-172-31-7-102.us-east-2.compute.internal.log",
+            "log_group_name": "{instance_id}_logs",
+            "log_stream_name": "hbase-regionserver"
+          },
+          {
+            "file_path": "/usr/local/HBase/logs/hbase-ec2-user-zookeeper-ip-172-31-7-102.us-east-2.compute.internal.log",
+            "log_group_name": "{instance_id}_logs",
+            "log_stream_name": "hbase-zookeeper"
+          },
+          {
+            "file_path": "/usr/local/HBase/logs/hbase-ec2-user-rest-ip-172-31-7-102.us-east-2.compute.internal.log",
+            "log_group_name": "{instance_id}_logs",
+            "log_stream_name": "hbase-rest"
+          },
+          {
+            "file_path": "/usr/local/HBase/logs/hbase-ec2-user-thrift-ip-172-31-7-102.us-east-2.compute.internal.log",
+            "log_group_name": "{instance_id}_logs",
+            "log_stream_name": "hbase-thrift"
+          },
+          {
+            "file_path": "/usr/local/storm/logs/worker-6700.log",
+            "log_group_name": "{instance_id}_logs",
+            "log_stream_name": "storm-worker-6700"
+          },
+          {
+            "file_path": "/usr/local/storm/logs/worker-6701.log",
+            "log_group_name": "{instance_id}_logs",
+            "log_stream_name": "storm-worker-6701"
+          },
+          {
+            "file_path": "/usr/local/storm/logs/worker-6702.log",
+            "log_group_name": "{instance_id}_logs",
+            "log_stream_name": "storm-worker-6702"
+          },
+          {
+            "file_path": "/usr/local/storm/logs/worker-6703.log",
+            "log_group_name": "{instance_id}_logs",
+            "log_stream_name": "storm-worker-6703"
+          }
+        ]
+      }
+    }
+  },
+  "metrics": {
+    "namespace": "HistoricalDatabaseAgent",
+    "metrics_collected": {
+      "mem": {
+        "measurement": [
+          "mem_available_percent",
+          "mem_used_percent",
+          "mem_buffered",
+          "mem_cached",
+          "mem_free",
+          "mem_total"
+        ],
+        "metrics_collection_interval": 30
+      },
+      "cpu": {
+        "totalcpu ": true,
+        "measurement": [
+          { "name": "cpu_usage_idle", "unit": "Percent" },
+          { "name": "cpu_usage_nice", "unit": "Percent" },
+          "cpu_usage_guest"
+        ],
+        "metrics_collection_interval": 30
+      },
+      "disk": {
+        "measurement": ["disk_free", "disk_total", "disk_used", "disk_used_percent"],
+        "ignore_file_system_types": ["sysfs", "devtmpfs", "tmpfs", "nvme0n1p128"],
+        "metrics_collection_interval": 30
+      },
+      "processes": {
+        "measurement": [
+          "running",
+          "sleeping",
+          "dead"
+        ]
+      }
+    },
+    "append_dimensions": {
+      "ImageId": "${aws:ImageId}",
+      "InstanceId": "${aws:InstanceId}",
+      "InstanceType": "${aws:InstanceType}"
+    },
+    "aggregation_dimensions" : [["InstanceId", "InstanceType"],[]]
+  }
+}
