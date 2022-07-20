@@ -1,10 +1,10 @@
 package ripple.importer;
 
-import org.apache.storm.Config;
-import org.apache.storm.spout.ShellSpout;
-import org.apache.storm.topology.IRichSpout;
-import org.apache.storm.topology.OutputFieldsDeclarer;
-import org.apache.storm.tuple.Fields;
+import backtype.storm.Config;
+import backtype.storm.spout.ShellSpout;
+import backtype.storm.topology.IRichSpout;
+import backtype.storm.topology.OutputFieldsDeclarer;
+import backtype.storm.tuple.Fields;
 
 import java.util.Map;
 
