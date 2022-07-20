@@ -25,67 +25,38 @@
  var fs = require('fs');
 
  function Storm() {
-     this.messagePart = '';
+     this.messagePart = "";
      this.taskIdsCallbacks = [];
      this.isFirstMessage = true;
      this.separator = '\nend\n';
-     this.logLevels = {
-         trace: 0, debug: 1, info: 2, warn: 3, error: 4
-     }
  }
  
  Storm.prototype.sendMsgToParent = function(msg) {
      var str = JSON.stringify(msg);
      process.stdout.write(str + this.separator);
- };
+ }
  
  Storm.prototype.sync = function() {
-     this.sendMsgToParent({'command':'sync'});
- };
+     this.sendMsgToParent({"command":"sync"});
+ }
  
  Storm.prototype.sendPid = function(heartbeatdir) {
      var pid = process.pid;
-     fs.closeSync(fs.openSync(heartbeatdir + '/' + pid, 'w'));
-     this.sendMsgToParent({'pid': pid})
- };
- Storm.prototype.sendToLogging = function(args, logLevel) {
-     var argArray = Object.keys(args).map(function(key) {
-         return (typeof args[key] === 'string') ? args[key] : JSON.stringify(args[key]);
-     });
-     var msg = argArray.join(' ');
-     this.sendMsgToParent({'command': 'log', 'msg': msg, 'level': logLevel});
- };
+     fs.closeSync(fs.openSync(heartbeatdir + "/" + pid, "w"));
+     this.sendMsgToParent({"pid": pid})
+ }
  
- Storm.prototype.logTrace = function() {
-     this.sendToLogging(arguments, this.logLevels.trace);
- };
- 
- Storm.prototype.logDebug = function() {
-     this.sendToLogging(arguments, this.logLevels.debug);
- };
- 
- Storm.prototype.logInfo = function() {
-     this.sendToLogging(arguments, this.logLevels.info);
- };
- 
- Storm.prototype.logWarn = function() {
-     this.sendToLogging(arguments, this.logLevels.warn);
- };
- 
- Storm.prototype.logError = function() {
-     this.sendToLogging(arguments, this.logLevels.error);
- };
- 
- // For backwards compatibility
- Storm.prototype.log = Storm.prototype.logInfo;
+ Storm.prototype.log = function(msg) {
+     this.sendMsgToParent({"command": "log", "msg": msg});
+ }
  
  Storm.prototype.initSetupInfo = function(setupInfo) {
      var self = this;
      var callback = function() {
          self.sendPid(setupInfo['pidDir']);
-     };
+     }
      this.initialize(setupInfo['conf'], setupInfo['context'], callback);
- };
+ }
  
  Storm.prototype.startReadingInput = function() {
      var self = this;
@@ -97,7 +68,7 @@
          })
  
      });
- };
+ }
  
  /**
   * receives a new string chunk and returns a list of new messages with the separator removed
@@ -127,11 +98,11 @@
          }
      }
      return messages;
- };
+ }
  
  Storm.prototype.isTaskIds = function(msg) {
      return (msg instanceof Array);
- };
+ }
  
  Storm.prototype.handleNewMessage = function(msg) {
      var parsedMsg = JSON.parse(msg);
@@ -144,7 +115,7 @@
      } else {
          this.handleNewCommand(parsedMsg);
      }
- };
+ }
  
  Storm.prototype.handleNewTaskId = function(taskIds) {
      //When new list of task ids arrives, the callback that was passed with the corresponding emit should be called.
@@ -157,7 +128,7 @@
      } else {
          throw new Error('Something went wrong, we off the split of task id callbacks');
      }
- };
+ }
  
  
  
@@ -167,10 +138,9 @@
   *
   * For bolt, the json must contain the required fields:
   * - tuple - the value to emit
+  * - anchorTupleId - the value of the anchor tuple (the input tuple that lead to this emit). Used to track the source
   * tuple and return ack when all components successfully finished to process it.
   * and may contain the optional fields:
-  * - anchorTupleId - the value of the anchor tuple or array of anchor tuples (the input tuple(s) that lead to this emit).
-  * Used to track the source tuple and return ack when all components successfully finished to process it.
   * - stream (if empty - emit to default stream)
   *
   * For spout, the json must contain the required fields:
@@ -191,12 +161,13 @@
      }
  
      if (!onTaskIds) {
-         throw new Error('You must pass a onTaskIds callback when using emit!')
+         onTaskIds = function(){};
+         //throw new Error('You must pass a onTaskIds callback when using emit!')
      }
  
      this.taskIdsCallbacks.push(onTaskIds);
-     this.__emit(messageDetails);
- };
+     this.__emit(messageDetails);;
+ }
  
  
  /**
@@ -205,10 +176,10 @@
   *
   * For bolt, the json must contain the required fields:
   * - tuple - the value to emit
+  * - anchorTupleId - the value of the anchor tuple (the input tuple that lead to this emit). Used to track the source
+  * tuple and return ack when all components successfully finished to process it.
   * - task - indicate the task to send the tuple to.
   * and may contain the optional fields:
-  * - anchorTupleId - the value of the anchor tuple or array of anchor tuples (the input tuple(s) that lead to this emit).
-  * Used to track the source tuple and return ack when all components successfully finished to process it.
   * - stream (if empty - emit to default stream)
   *
   * For spout, the json must contain the required fields:
@@ -222,26 +193,26 @@
   */
  Storm.prototype.emitDirect = function(commandDetails) {
      if (!commandDetails.task) {
-         throw new Error('Emit direct must receive task id!')
+         throw new Error("Emit direct must receive task id!")
      }
      this.__emit(commandDetails);
- };
+ }
  
  /**
   * Initialize storm component according to the configuration received.
-  * @param conf configuration object according to storm protocol.
+  * @param conf configuration object accrding to storm protocol.
   * @param context context object according to storm protocol.
   * @param done callback. Call this method when finished initializing.
   */
  Storm.prototype.initialize = function(conf, context, done) {
      done();
- };
+ }
  
  Storm.prototype.run = function() {
      process.stdout.setEncoding('utf8');
      process.stdin.setEncoding('utf8');
      this.startReadingInput();
- };
+ }
  
  function Tuple(id, component, stream, task, values) {
      this.id = id;
@@ -251,23 +222,15 @@
      this.values = values;
  }
  
- Tuple.prototype.isTickTuple = function(){
-   return this.task === -1 && this.stream === '__tick';
- };
- 
- Tuple.prototype.isHeartbeatTuple = function(){
-   return this.task === -1 && this.stream === '__heartbeat';
- };
- 
  /**
   * Base class for storm bolt.
   * To create a bolt implement 'process' method.
-  * You may also implement initialize method too
+  * You may also implement initialize method to
   */
  function BasicBolt() {
      Storm.call(this);
      this.anchorTuple = null;
- }
+ };
  
  BasicBolt.prototype = Object.create(Storm.prototype);
  BasicBolt.prototype.constructor = BasicBolt;
@@ -276,38 +239,31 @@
   * Emit message.
   * @param commandDetails json with the required fields:
   * - tuple - the value to emit
+  * - anchorTupleId - the value of the anchor tuple (the input tuple that lead to this emit). Used to track the source
+  * tuple and return ack when all components successfully finished to process it.
   * and the optional fields:
-  * - anchorTupleId - the value of the anchor tuple or array of anchor tuples (the input tuple(s) that lead to this emit).
-  * Used to track the source tuple and return ack when all components successfully finished to process it.
   * - stream (if empty - emit to default stream)
   * - task (pass only to emit to specific task)
   */
  BasicBolt.prototype.__emit = function(commandDetails) {
      var self = this;
  
-     var anchors = [];
-     if (commandDetails.anchorTupleId instanceof Array) {
-         anchors = commandDetails.anchorTupleId;
-     } else if (commandDetails.anchorTupleId) {
-         anchors = [commandDetails.anchorTupleId];
-     }
- 
      var message = {
-         command: 'emit',
+         command: "emit",
          tuple: commandDetails.tuple,
          stream: commandDetails.stream,
          task: commandDetails.task,
-         anchors: anchors
+         anchors: [commandDetails.anchorTupleId]
      };
  
      this.sendMsgToParent(message);
- };
+ }
  
  BasicBolt.prototype.handleNewCommand = function(command) {
      var self = this;
-     var tup = new Tuple(command['id'], command['comp'], command['stream'], command['task'], command['tuple']);
+     var tup = new Tuple(command["id"], command["comp"], command["stream"], command["task"], command["tuple"]);
  
-     if (tup.isHeartbeatTuple()) {
+     if (tup.task === -1 && tup.stream === "__heartbeat") {
          self.sync();
          return;
      }
@@ -318,9 +274,9 @@
              return;
          }
          self.ack(tup);
-     };
+     }
      this.process(tup, callback);
- };
+ }
  
  /**
   * Implement this method when creating a bolt. This is the main method that provides the logic of the bolt (what
@@ -331,12 +287,14 @@
  BasicBolt.prototype.process = function(tuple, done) {};
  
  BasicBolt.prototype.ack = function(tup) {
-     this.sendMsgToParent({'command': 'ack', 'id': tup.id});
- };
+     this.sendMsgToParent({"command": "ack", "id": tup.id});
+ }
  
  BasicBolt.prototype.fail = function(tup, err) {
-     this.sendMsgToParent({'command': 'fail', 'id': tup.id});
- };
+     this.log('FAIL: ' + err);
+     this.sendMsgToParent({"command": "fail", "id": tup.id});
+ }
+ 
  
  /**
   * Base class for storm spout.
@@ -347,23 +305,11 @@
   */
  function Spout() {
      Storm.call(this);
- }
+ };
  
  Spout.prototype = Object.create(Storm.prototype);
  
  Spout.prototype.constructor = Spout;
- 
- /**
-  * This method will be called when a spout has been activated out of a deactivated mode.
-  * @param done Call this method when finished and ready to receive tuples.
-  */
- Spout.prototype.activate = function(done) {};
- 
- /**
-  * This method will be called when a spout has been deactivated.
-  * @param done Call this method when finished.
-  */
- Spout.prototype.deactivate = function(done) {};
  
  /**
   * This method will be called when an ack is received for preciously sent tuple. One may implement it.
@@ -392,26 +338,18 @@
          self.sync();
      }
  
-     if (command['command'] === 'activate') {
-         this.activate(callback);
-     }
- 
-     if (command['command'] === 'deactivate') {
-         this.deactivate(callback);
-     }
- 
-     if (command['command'] === 'next') {
+     if (command["command"] === "next") {
          this.nextTuple(callback);
      }
  
-     if (command['command'] === 'ack') {
-         this.ack(command['id'], callback);
+     if (command["command"] === "ack") {
+         this.ack(command["id"], callback);
      }
  
-     if (command['command'] === 'fail') {
-         this.fail(command['id'], callback);
+     if (command["command"] === "fail") {
+         this.fail(command["id"], callback);
      }
- };
+ }
  
  /**
   * @param commandDetails json with the required fields:
@@ -423,7 +361,7 @@
   */
  Spout.prototype.__emit = function(commandDetails) {
      var message = {
-         command: 'emit',
+         command: "emit",
          tuple: commandDetails.tuple,
          id: commandDetails.id,
          stream: commandDetails.stream,
@@ -431,8 +369,8 @@
      };
  
      this.sendMsgToParent(message);
- };
+ }
  
  module.exports.BasicBolt = BasicBolt;
  module.exports.Spout = Spout;
- module.exports.Tuple = Tuple;
+ 
