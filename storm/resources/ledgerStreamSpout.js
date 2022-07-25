@@ -52,6 +52,7 @@ function notify(message, restart) {
   //   }
   // })
 
+  log.error('API Error - Message: ' + message)
   if (ledgerSpout) ledgerSpout.log(message)
   if (restart) {
     if (stream) stream.stop()

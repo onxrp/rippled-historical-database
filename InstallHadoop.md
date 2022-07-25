@@ -148,9 +148,6 @@ tail -1000 /usr/local/ripple-historical-database/logs/api.log
 /usr/local/ripple-historical-database/storm/production/importer.sh stop
 
 tail -1000 /usr/local/storm/logs/worker-6700.log
-tail -1000 /usr/local/storm/logs/workers-artifacts/ripple-ledger-importer-1-1658307204/6700/worker.log
-tail -1000 /usr/local/storm/logs/workers-artifacts/ripple-ledger-importer-1-1658312683/6700/worker.log
-tail -1000 /usr/local/storm/logs/workers-artifacts/ripple-ledger-importer-1-1658326616/6700/worker.log
 
 // check space
 du -sh /usr/local/*

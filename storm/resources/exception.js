@@ -5,9 +5,9 @@
 // var transporter = nodemailer.createTransport();
 // var to = config.get('recipients');
 // var name = config.get('name') || 'unnamed';
-var exec = require('child_process').exec;
+var exec = require('child_process').exec
 
-var log;
+var log
 
 /**
  * notify
@@ -32,27 +32,31 @@ var log;
 
 function killTopology() {
   exec('storm kill "ripple-ledger-importer"', function callback(e, stdout, stderr) {
-    if (e) {
-      log.error(e);
-    }
+    if (e) log.error(e)
+    if (stderr) log.error(stderr)
+    if (stdout) log.info(stdout)
+  })
+}
 
-    if (stderr) {
-      log.error(stderr);
-    }
+function restartTopology() {
+  exec(
+    // '/usr/local/ripple-historical-database/storm/production/importer.sh restart',
+    'storm jar /usr/local/ripple-historical-database/storm/production/target/importer-0.0.1-jar-with-dependencies.jar ripple.importer.ImportTopology "ripple-ledger-importer"',
+    function callback(e, stdout, stderr) {
+      if (e) log.error(e)
+      if (stderr) log.error(stderr)
+      if (stdout) log.info(stdout)
+    },
+  )
+}
 
-    if (stdout) {
-      log.info(stdout);
-    }
-  });
-};
-
-module.exports = function(logger) {
-  log = logger;
+module.exports = function (logger) {
+  log = logger
 
   // handle uncaught exception
-  process.on('uncaughtException', function(e) {
-    log.error(e);
-    log.error(e.stack);
+  process.on('uncaughtException', function (e) {
+    log.error('Unhandled Exception:', e)
+    log.error('Unhandled Stacktrace:', e.stack)
 
     // send notification
     // notify(e.stack, function(err, info) {
@@ -64,6 +68,7 @@ module.exports = function(logger) {
     // });
 
     // kill the topology
-    killTopology();
-  });
+    // killTopology()
+    restartTopology()
+  })
 }
