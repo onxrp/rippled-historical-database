@@ -38,16 +38,21 @@ function killTopology() {
   })
 }
 
+let timeout = -1
 function restartTopology() {
-  exec(
-    // '/usr/local/ripple-historical-database/storm/production/importer.sh restart',
-    'storm jar /usr/local/ripple-historical-database/storm/production/target/importer-0.0.1-jar-with-dependencies.jar ripple.importer.ImportTopology "ripple-ledger-importer"',
-    function callback(e, stdout, stderr) {
-      if (e) log.error(e)
-      if (stderr) log.error(stderr)
-      if (stdout) log.info(stdout)
-    },
-  )
+  if (timeout >= 0) clearTimeout(timeout)
+  timeout = setTimeout(() => {
+    timeout = -1
+    exec(
+      '/usr/local/ripple-historical-database/storm/production/importer.sh restart',
+      // 'storm jar /usr/local/ripple-historical-database/storm/production/target/importer-0.0.1-jar-with-dependencies.jar ripple.importer.ImportTopology "ripple-ledger-importer"',
+      function callback(e, stdout, stderr) {
+        if (e) log.error(e)
+        if (stderr) log.error(stderr)
+        if (stdout) log.info(stdout)
+      },
+    )
+  }, 60000)
 }
 
 module.exports = function (logger) {

@@ -79,6 +79,14 @@ Delete on hbase lock:
 hdfs dfs -rm -R /hbase/.tmp/hbase-hbck.lock 
 
 
+https://www.linkedin.com/pulse/solved-mystery-blockmissingexception-hadoop-file-system-rajat-kumar
+
+
+WITH HBACK2
+
+hbase hbck -j /usr/local/hbase-operator-tools/hbase-hbck2/target/hbase-hbck2-1.2.0.jar
+for example
+hbase hbck -j /usr/local/hbase-operator-tools/hbase-hbck2/target/hbase-hbck2-1.2.0.jar filesystem -fix
 
 
 mkdir /hadoop/bak
@@ -88,6 +96,7 @@ hbase-daemon.sh stop thrift
 hbase-daemon.sh stop rest
 local-regionservers.sh stop 2 3 4 5
 stop-hbase.sh
+zkServer.sh stop
 stop-yarn.sh
 stop-dfs.sh
 
@@ -96,34 +105,13 @@ cp /hadoop/bak/myid  /hadoop/zookeeper/
 
 start-dfs.sh
 start-yarn.sh
+zkServer.sh start
 start-hbase.sh
 local-regionservers.sh start 2 3 4 5
 hbase-daemon.sh start rest -p 20550
 hbase-daemon.sh start thrift -f -p 9090
 
-
-
-
 jps (check runnign shizle)
-
-
-yarn run import:live
-yarn run import:backfill -- --startIndex 70000000
-yarn run import:createTables
-
-
-node /usr/local/ripple-historical-database/scripts/import/backfill.js --startIndex 70000000
-pm2 delete ripple-histdb-backfill 
-pm2 start /usr/local/ripple-historical-database/scripts/import/backfill.js --name ripple-histdb-backfill --restart-delay 60000 -- --startIndex 70135272
-
-yarn run import:backfill -- --startIndex
-
-cd /usr/local/ripple-historical-database
-pm2 start "yarn run import:backfill --startIndex 70135272" --name ripple-histdb-backfill
-pm2 start "yarn run import:backfill --startIndex 71200000 --stopIndex 71258655" --name ripple-histdb-backfill-lastday
-pm2 start "yarn run import:live" --name ripple-histdb-liveimport
-pm2 start "yarn run start" --name ripple-histdb-api
-
 
 pm2 start "storm nimbus" --name storm-nimbus
 pm2 start "storm supervisor" --name storm-supervisor
@@ -136,6 +124,8 @@ tail -1000 /usr/local/HBase/logs/hbase-ec2-user-2-regionserver-ip-172-31-7-102.u
 tail -1000 /usr/local/HBase/logs/hbase-ec2-user-zookeeper-ip-172-31-7-102.us-east-2.compute.internal.log
 tail -1000 /usr/local/HBase/logs/hbase-ec2-user-rest-ip-172-31-7-102.us-east-2.compute.internal.log
 tail -1000 /usr/local/HBase/logs/hbase-ec2-user-thrift-ip-172-31-7-102.us-east-2.compute.internal.log
+
+tail -1000 /usr/local/zookeeper/logs/zookeeper-ec2-user-server-ip-172-31-7-102.us-east-2.compute.internal.out
 
 tail -1000 /usr/local/ripple-historical-database/logs/backfill.log
 tail -1000 /usr/local/ripple-historical-database/logs/default.log
@@ -160,3 +150,30 @@ log-configuration-aws.json
 sudo nano /opt/aws/amazon-cloudwatch-agent/bin/config.json
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s
 systemctl restart amazon-cloudwatch-agent.service
+
+
+
+
+
+
+
+
+
+
+// old shizzle
+yarn run import:live
+yarn run import:backfill -- --startIndex 70000000
+yarn run import:createTables
+
+
+node /usr/local/ripple-historical-database/scripts/import/backfill.js --startIndex 70000000
+pm2 delete ripple-histdb-backfill 
+pm2 start /usr/local/ripple-historical-database/scripts/import/backfill.js --name ripple-histdb-backfill --restart-delay 60000 -- --startIndex 70135272
+
+yarn run import:backfill -- --startIndex
+
+cd /usr/local/ripple-historical-database
+pm2 start "yarn run import:backfill --startIndex 70135272" --name ripple-histdb-backfill
+pm2 start "yarn run import:backfill --startIndex 71200000 --stopIndex 71258655" --name ripple-histdb-backfill-lastday
+pm2 start "yarn run import:live" --name ripple-histdb-liveimport
+pm2 start "yarn run start" --name ripple-histdb-api
