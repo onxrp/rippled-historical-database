@@ -22,7 +22,7 @@
     "@types/async-exit-hook": "^2.0.0",
     "async": "^0.9.0",
     "async-exit-hook": "^2.0.1",
-    "bignumber.js": "2.0.7",
+    "bignumber.js": "^9.0.2",
     "bluebird": "^2.3.4",
     "body-parser": "^1.8.2",
     "colors": "^1.1.2",
