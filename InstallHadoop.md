@@ -125,6 +125,7 @@ tail -1000 /usr/local/HBase/logs/hbase-ec2-user-zookeeper-ip-172-31-7-102.us-eas
 tail -1000 /usr/local/HBase/logs/hbase-ec2-user-rest-ip-172-31-7-102.us-east-2.compute.internal.log
 tail -1000 /usr/local/HBase/logs/hbase-ec2-user-thrift-ip-172-31-7-102.us-east-2.compute.internal.log
 
+tail -1000 /usr/local/zookeeper/logs/zookeeper_audit.log
 tail -1000 /usr/local/zookeeper/logs/zookeeper-ec2-user-server-ip-172-31-7-102.us-east-2.compute.internal.out
 
 tail -1000 /usr/local/ripple-historical-database/logs/backfill.log
