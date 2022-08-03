@@ -6,6 +6,7 @@
 // var to = config.get('recipients');
 // var name = config.get('name') || 'unnamed';
 var exec = require('child_process').exec
+var spawn = require('child_process').spawn
 
 var log
 
@@ -43,15 +44,11 @@ function restartTopology() {
   if (timeout >= 0) clearTimeout(timeout)
   timeout = setTimeout(() => {
     timeout = -1
-    exec(
-      '/usr/local/ripple-historical-database/storm/production/importer.sh restart',
-      // 'storm jar /usr/local/ripple-historical-database/storm/production/target/importer-0.0.1-jar-with-dependencies.jar ripple.importer.ImportTopology "ripple-ledger-importer"',
-      function callback(e, stdout, stderr) {
-        if (e) log.error(e)
-        if (stderr) log.error(stderr)
-        if (stdout) log.info(stdout)
-      },
-    )
+    const subProcess = spawn('/usr/local/ripple-historical-database/storm/production/importer.sh restart', [], {
+      detached: true,
+      stdio: 'ignore',
+    })
+    subProcess.unref()
   }, 60000)
 }
 
