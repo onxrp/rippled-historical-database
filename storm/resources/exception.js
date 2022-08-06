@@ -44,7 +44,7 @@ function restartTopology() {
   if (timeout >= 0) clearTimeout(timeout)
   timeout = setTimeout(() => {
     timeout = -1
-    const subProcess = spawn('/usr/local/ripple-historical-database/storm/production/importer.sh restart', [], {
+    const subProcess = spawn('/usr/local/ripple-historical-database/storm/production/importer.sh', ['restart'], {
       detached: true,
       stdio: 'ignore',
     })
